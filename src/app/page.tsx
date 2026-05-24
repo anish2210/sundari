@@ -7,7 +7,7 @@ import { ShopByCategory }     from "@/components/home/shop-by-category";
 import { StyledEditorial }    from "@/components/home/styled-editorial";
 import { ArchivalCollection } from "@/components/home/archival-collection";
 import { ShopByGender }       from "@/components/home/shop-by-gender";
-import { FeatureBanners }     from "@/components/home/feature-banners";
+// import { FeatureBanners }     from "@/components/home/feature-banners";
 import { WeddingShop }        from "@/components/home/wedding-shop";
 import { TryBeforeShine }     from "@/components/home/try-before-shine";
 import { CustomerReels }      from "@/components/home/customer-reels";
@@ -29,7 +29,7 @@ export default function HomePage() {
       <StyledEditorial />
       <ArchivalCollection />
       <ShopByGender />
-      <FeatureBanners />
+      {/* <FeatureBanners /> */}
       <WeddingShop />
       <TryBeforeShine />
       <CustomerReels />

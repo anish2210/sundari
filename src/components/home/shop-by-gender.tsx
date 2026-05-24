@@ -1,101 +1,70 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Route } from "next";
-import { SectionHeader } from "@/components/ui/section-header";
+
+const SQUARE_IMAGES = [
+  { src: "/assets/squareImage1.png", alt: "Sundari jewellery style detail 1" },
+  { src: "/assets/squareImage2.png", alt: "Sundari jewellery style detail 2" },
+  { src: "/assets/squareImage3.png", alt: "Sundari jewellery style detail 3" },
+  { src: "/assets/squareImage4.png", alt: "Sundari jewellery style detail 4" },
+] as const;
 
 export function ShopByGender() {
   return (
-    <section className="py-16" style={{ background: "var(--surface-warm)" }}>
-      <div className="container-shell">
-        <SectionHeader title="Shop by Gender" className="mb-10" />
+    <section className="pt-7 pb-4 sm:pt-8 sm:pb-5" style={{ background: "var(--surface-warm)" }}>
+      <div className="mb-5 flex items-center justify-center gap-5 sm:gap-7">
+        <span className="hidden h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent sm:block" />
+        <span className="display-font text-center text-[2.05rem] font-semibold italic leading-none tracking-[0.08em] text-[var(--gold)] drop-shadow-[0_2px_1px_rgba(70,40,0,0.32)] sm:text-[2.45rem]">
+          Shop by Gender
+        </span>
+        <span className="hidden h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent sm:block" />
+      </div>
 
-        <div className="grid sm:grid-cols-2 gap-5">
-          {/* -- Crafted for Her ----------------------------------- */}
-          <Link
-            href={"/collections/womens-edit" as Route}
-            className="group relative overflow-hidden rounded-sm"
-            style={{ aspectRatio: "4/5" }}
+      <div className="grid grid-cols-1 sm:grid-cols-2">
+        <Link
+          href={"/collections/womens-edit" as Route}
+          className="focus-ring group relative block overflow-hidden"
+        >
+          <Image
+            src="/assets/CrafterForHerLeft.png"
+            alt="Crafted for her"
+            width={686}
+            height={850}
+            sizes="(min-width: 640px) 50vw, 100vw"
+            className="h-auto w-full transition-transform duration-700 group-hover:scale-[1.02]"
+          />
+        </Link>
+
+        <Link
+          href={"/collections/mens-edit" as Route}
+          className="focus-ring group relative block overflow-hidden"
+        >
+          <Image
+            src="/assets/CraftedForHimRight.png"
+            alt="Crafted for him"
+            width={686}
+            height={850}
+            sizes="(min-width: 640px) 50vw, 100vw"
+            className="h-auto w-full transition-transform duration-700 group-hover:scale-[1.02]"
+          />
+        </Link>
+      </div>
+
+      <div className="mx-auto mt-4 grid w-[min(1240px,calc(100%-32px))] grid-cols-1 gap-4 sm:mt-5 sm:grid-cols-2 sm:gap-5">
+        {SQUARE_IMAGES.map((image) => (
+          <div
+            key={image.src}
+            className="relative aspect-[697/557] overflow-hidden rounded-[8px]"
           >
             <Image
-              src="/assets/image_19.png"
-              alt="Jewellery crafted for her"
+              src={image.src}
+              alt={image.alt}
               fill
-              sizes="(min-width: 640px) 50vw, 100vw"
-              className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
+              sizes="(min-width: 720px) 50vw, 100vw"
+              className="object-contain transition-transform duration-700 hover:scale-[1.02]"
             />
-            {/* Gradient overlay */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(to top, rgba(14,4,4,0.8) 0%, rgba(14,4,4,0.1) 60%)",
-              }}
-            />
-            {/* Content */}
-            <div className="absolute inset-x-0 bottom-0 p-8">
-              <p
-                className="text-[0.6rem] uppercase tracking-[0.4em] mb-2"
-                style={{ color: "var(--gold)" }}
-              >
-                * For Her
-              </p>
-              <h3
-                className="display-font font-semibold italic leading-tight mb-4"
-                style={{ color: "var(--cream)", fontSize: "2rem" }}
-              >
-                Crafted
-                <br />
-                for her
-              </h3>
-              <span className="btn-ghost-gold text-xs group-hover:bg-[var(--gold)] group-hover:text-[var(--bg-deep)] transition-all duration-200 focus-ring">
-                Explore
-              </span>
-            </div>
-          </Link>
-
-          {/* -- Crafted for Him ----------------------------------- */}
-          <Link
-            href={"/collections/mens-edit" as Route}
-            className="group relative overflow-hidden rounded-sm"
-            style={{ aspectRatio: "4/5" }}
-          >
-            <Image
-              src="/assets/image_20.png"
-              alt="Jewellery crafted for him"
-              fill
-              sizes="(min-width: 640px) 50vw, 100vw"
-              className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-            />
-            {/* Gradient overlay */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(to top, rgba(14,4,4,0.8) 0%, rgba(14,4,4,0.1) 60%)",
-              }}
-            />
-            {/* Content */}
-            <div className="absolute inset-x-0 bottom-0 p-8">
-              <p
-                className="text-[0.6rem] uppercase tracking-[0.4em] mb-2"
-                style={{ color: "var(--gold)" }}
-              >
-                * For Him
-              </p>
-              <h3
-                className="display-font font-semibold italic leading-tight mb-4"
-                style={{ color: "var(--cream)", fontSize: "2rem" }}
-              >
-                Crafted
-                <br />
-                for him
-              </h3>
-              <span className="btn-ghost-gold text-xs group-hover:bg-[var(--gold)] group-hover:text-[var(--bg-deep)] transition-all duration-200 focus-ring">
-                Explore
-              </span>
-            </div>
-          </Link>
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   );

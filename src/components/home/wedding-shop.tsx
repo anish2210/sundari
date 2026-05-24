@@ -1,103 +1,96 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Route } from "next";
-import { SectionHeader } from "@/components/ui/section-header";
 
-const WEDDING_CARDS = [
+const WEDDING_COLLECTIONS = [
   {
-    title: "Bridal Sets",
-    subtitle: "Complete your bridal look",
+    src: "/assets/shopforwedding1.png",
+    alt: "Haldi Collection",
     href: "/collections/bridal",
-    image: "/assets/golden-swirl-frame-dark-background-with-text-space_3.png",
-    cta: "Shop Now",
   },
   {
-    title: "Engagement Rings",
-    subtitle: "Begin the forever story",
-    href: "/collections/rings",
-    image: "/assets/golden-swirl-frame-dark-background-with-text-space_4.png",
-    cta: "Explore",
-  },
-  {
-    title: "Wedding Earrings",
-    subtitle: "Statement pieces for the big day",
-    href: "/collections/earrings",
-    image: "/assets/golden-swirl-frame-dark-background-with-text-space_6.png",
-    cta: "View",
-  },
-  {
-    title: "Maang Tikka",
-    subtitle: "The crowning jewel of bridal adornment",
+    src: "/assets/shopforwedding2.png",
+    alt: "Wedding Bridal Collection",
     href: "/collections/bridal",
-    image: "/assets/golden-swirl-frame-dark-background-with-text-space_8.png",
-    cta: "Shop Now",
+  },
+  {
+    src: "/assets/shopforwedding3.png",
+    alt: "Sangeet Collection",
+    href: "/collections/bridal",
+  },
+  {
+    src: "/assets/shopforwedding4.png",
+    alt: "Reception Collection",
+    href: "/collections/bridal",
+  },
+  {
+    src: "/assets/shopforwedding5.png",
+    alt: "Mehendi Collection",
+    href: "/collections/bridal",
   },
 ] as const;
 
 export function WeddingShop() {
   return (
-    <section className="py-16" style={{ background: "var(--surface)" }}>
-      <div className="container-shell">
-        <SectionHeader title="Shop for Wedding" className="mb-10" />
+    <section className="py-7 sm:py-8" style={{ background: "var(--surface)" }}>
+      <div className="mb-5 flex items-center justify-center gap-5 sm:gap-7">
+        <span className="hidden h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent sm:block" />
+        <span className="display-font text-center text-[2.05rem] font-semibold italic leading-none tracking-[0.08em] text-[var(--gold)] drop-shadow-[0_2px_1px_rgba(70,40,0,0.32)] sm:text-[2.45rem]">
+          Shop for Wedding
+        </span>
+        <span className="hidden h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent sm:block" />
+      </div>
 
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {WEDDING_CARDS.map((card) => (
-            <Link
-              key={card.title}
-              href={card.href as Route}
-              className="group"
-            >
-              <div
-                className="relative overflow-hidden mb-3"
-                style={{
-                  borderRadius: "6px",
-                  aspectRatio: "3/3.5",
-                  background: "var(--bg-dark)",
-                }}
+      <div className="relative h-[120vh] overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src="/assets/Shop-for-wedding-bg.png"
+            alt="Shop for wedding jewellery"
+            fill
+            sizes="100vw"
+            className="object-cover"
+            priority
+          />
+        </div>
+
+        <div className="relative z-10 flex h-full flex-col items-center justify-center gap-[min(2.5vh,22px)] px-4 py-[min(4vh,36px)]">
+          <div className="grid w-[min(980px,94vw)] grid-cols-3 items-center justify-items-center gap-x-[min(3vw,34px)]">
+            {WEDDING_COLLECTIONS.slice(0, 3).map((collection) => (
+              <Link
+                key={collection.src}
+                href={collection.href as Route}
+                className="focus-ring group block w-full max-w-[min(29vw,275px)]"
               >
                 <Image
-                  src={card.image}
-                  alt={card.title}
-                  fill
-                  sizes="(min-width: 1024px) 25vw, 50vw"
-                  className="object-cover transition-transform duration-600 group-hover:scale-105"
+                  src={collection.src}
+                  alt={collection.alt}
+                  width={404}
+                  height={502}
+                  sizes="(min-width: 768px) 25vw, 32vw"
+                  className="h-auto w-full drop-shadow-[0_10px_18px_rgba(0,0,0,0.42)] transition-transform duration-700 group-hover:-translate-y-1 group-hover:scale-[1.03]"
                 />
-                {/* Overlay */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(to top, rgba(14,4,4,0.75) 0%, transparent 55%)",
-                  }}
+              </Link>
+            ))}
+          </div>
+
+          <div className="grid w-[min(660px,64vw)] grid-cols-2 items-center justify-items-center gap-x-[min(4vw,42px)]">
+            {WEDDING_COLLECTIONS.slice(3).map((collection) => (
+              <Link
+                key={collection.src}
+                href={collection.href as Route}
+                className="focus-ring group block w-full max-w-[min(29vw,275px)]"
+              >
+                <Image
+                  src={collection.src}
+                  alt={collection.alt}
+                  width={404}
+                  height={502}
+                  sizes="(min-width: 768px) 25vw, 32vw"
+                  className="h-auto w-full drop-shadow-[0_10px_18px_rgba(0,0,0,0.42)] transition-transform duration-700 group-hover:-translate-y-1 group-hover:scale-[1.03]"
                 />
-                {/* CTA pill */}
-                <div className="absolute inset-x-0 bottom-0 p-4">
-                  <p
-                    className="text-[10px] font-semibold uppercase tracking-[0.22em] mb-1"
-                    style={{ color: "var(--cream-muted)" }}
-                  >
-                    {card.subtitle}
-                  </p>
-                  <h4
-                    className="display-font font-semibold italic text-lg leading-tight mb-3"
-                    style={{ color: "var(--cream)" }}
-                  >
-                    {card.title}
-                  </h4>
-                  <span
-                    className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] px-3 py-1.5 border transition-all duration-200 group-hover:bg-[var(--gold)] group-hover:text-[var(--bg-deep)]"
-                    style={{
-                      borderColor: "var(--gold)",
-                      color: "var(--gold)",
-                      borderRadius: "2px",
-                    }}
-                  >
-                    {card.cta}
-                  </span>
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </section>
