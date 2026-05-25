@@ -5,6 +5,7 @@ import type { Route } from "next";
 import { Heart, Menu, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CartDrawer } from "@/components/commerce/cart-drawer";
+import { useCart } from "@/context/cart-context";
 
 const NAV_LINKS: Array<{ href: string; label: string }> = [
   { href: "/", label: "Home" },
@@ -27,8 +28,8 @@ const UTILITY_LINKS = ["About", "Contact", "Account"];
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { count, open: cartOpen, setOpen: setCartOpen } = useCart();
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 8);
@@ -135,11 +136,16 @@ export function SiteHeader() {
               <button
                 aria-label="Open cart"
                 type="button"
-                className="focus-ring text-[11px] font-medium uppercase tracking-[0.28em] transition-colors hover:text-[var(--gold-light)]"
+                className="focus-ring relative text-[11px] font-medium uppercase tracking-[0.28em] transition-colors hover:text-[var(--gold-light)]"
                 style={{ color: "var(--gold-pale)" }}
                 onClick={() => setCartOpen(true)}
               >
                 Cart
+                {count > 0 && (
+                  <span className="absolute -right-4 -top-2 flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold" style={{ background: "var(--ruby)", color: "white" }}>
+                    {count}
+                  </span>
+                )}
               </button>
             </div>
 
@@ -147,11 +153,16 @@ export function SiteHeader() {
               <button
                 aria-label="Open cart"
                 type="button"
-                className="focus-ring rounded-sm border px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.22em]"
+                className="focus-ring relative rounded-sm border px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.22em]"
                 style={{ borderColor: "rgba(228,200,138,0.45)", color: "var(--gold-pale)" }}
                 onClick={() => setCartOpen(true)}
               >
                 Cart
+                {count > 0 && (
+                  <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold" style={{ background: "var(--ruby)", color: "white" }}>
+                    {count}
+                  </span>
+                )}
               </button>
               <button
                 aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -219,7 +230,7 @@ export function SiteHeader() {
         )}
       </header>
 
-      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+      <CartDrawer />
     </>
   );
 }

@@ -11,18 +11,18 @@ const CATEGORIES = [
 ] as const;
 
 const CARD_SIZES = [
-  "lg:w-[162px]",
-  "lg:w-[182px]",
-  "lg:w-[204px]",
-  "lg:w-[182px]",
-  "lg:w-[162px]",
+  "lg:w-[200px]",
+  "lg:w-[224px]",
+  "lg:w-[252px]",
+  "lg:w-[224px]",
+  "lg:w-[200px]",
 ] as const;
 
 export function ShopByCategory() {
   return (
-    <section className="py-7 sm:py-8" style={{ background: "#f4f3f4" }}>
-      <div className="mx-auto w-[min(960px,calc(100%-32px))]">
-        <div className="mb-5 flex items-center justify-center gap-5 sm:gap-7">
+    <section className="py-14 sm:py-20" style={{ background: "#f4f3f4" }}>
+      <div className="mx-auto w-[min(1160px,calc(100%-40px))]">
+        <div className="mb-8 flex items-center justify-center gap-5 sm:gap-7">
           <span className="hidden h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent sm:block" />
           <span className="display-font text-center text-[2.05rem] font-semibold italic leading-none tracking-[0.08em] text-[var(--gold)] drop-shadow-[0_2px_1px_rgba(70,40,0,0.32)] sm:text-[2.45rem]">
             Shop by Category
@@ -47,7 +47,7 @@ export function ShopByCategory() {
                   src={cat.image}
                   alt={cat.label}
                   fill
-                  sizes="(min-width: 1024px) 204px, (min-width: 640px) 30vw, 45vw"
+                  sizes="(min-width: 1024px) 252px, (min-width: 640px) 30vw, 45vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div
@@ -57,7 +57,7 @@ export function ShopByCategory() {
                       "linear-gradient(to top, rgba(35,12,6,0.72) 0%, rgba(35,12,6,0.18) 55%, transparent 100%)",
                   }}
                 />
-                <span className="display-font absolute bottom-3 left-3 text-[1.55rem] italic leading-none text-white drop-shadow-[0_2px_3px_rgba(0,0,0,0.58)] sm:text-[1.8rem] lg:text-[1.65rem]">
+                <span className="display-font absolute bottom-4 left-4 text-[1.65rem] italic leading-none text-white drop-shadow-[0_2px_3px_rgba(0,0,0,0.58)] sm:text-[1.9rem] lg:text-[1.85rem]">
                   {cat.label}
                 </span>
               </div>

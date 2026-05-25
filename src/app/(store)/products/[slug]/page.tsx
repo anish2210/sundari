@@ -8,6 +8,7 @@ import { ShieldCheck, RefreshCw, Truck, Award } from "lucide-react";
 import { ImageGallery } from "@/components/product/image-gallery";
 import { ProductActions } from "@/components/product/product-actions";
 import { ProductAccordion } from "@/components/product/product-accordion";
+import { TryOnButton } from "@/components/tryon/try-on-button";
 import { products, getRelatedProducts } from "@/data/catalog";
 import { createMetadata, formatPrice } from "@/lib/seo";
 
@@ -166,7 +167,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <div style={{ height: 1, background: "rgba(138,106,58,0.2)" }} />
 
             {/* Interactive actions */}
-            <ProductActions productName={product.name} sizes={product.sizes} />
+            <ProductActions
+              productId={product.id}
+              slug={product.slug}
+              productName={product.name}
+              image={product.images?.[0] ?? product.image}
+              material={product.material}
+              price={product.price}
+              sizes={product.sizes}
+            />
+
+            {/* Virtual try-on */}
+            <TryOnButton skuId={product.id} productName={product.name} />
 
             <div style={{ height: 1, background: "rgba(138,106,58,0.2)" }} />
 

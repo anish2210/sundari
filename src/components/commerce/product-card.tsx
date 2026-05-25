@@ -36,7 +36,14 @@ export function ProductCard({ product }: ProductCardProps) {
           <h3 className="mt-1.5 text-sm font-semibold leading-snug sm:text-base">{product.name}</h3>
           <p className="mt-1 text-sm font-medium" style={{ color: "var(--ink-soft)" }}>{formatPrice(product.price)}</p>
         </div>
-        <AddToCartButton productName={product.name} />
+        <AddToCartButton
+          productId={product.id}
+          slug={product.slug}
+          productName={product.name}
+          image={product.image}
+          material={product.material}
+          price={product.price}
+        />
       </div>
     </article>
   );
