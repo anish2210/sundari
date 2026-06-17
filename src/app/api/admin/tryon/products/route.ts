@@ -18,18 +18,33 @@ export async function PATCH(req: NextRequest) {
     await connectDB();
 
     const body = (await req.json()) as {
-      skuId: string;
-      tryonEnabled?: boolean;
-      jewelleryType?: string;
-      realSizeMm?: number;
+      skuId:             string;
+      tryonEnabled?:     boolean;
+      jewelleryType?:    string;
       promptDescriptor?: string;
     };
 
     if (!body.skuId) return NextResponse.json({ error: "missing_skuId" }, { status: 400 });
 
+    if (body.tryonEnabled === true) {
+      const config = await ProductTryonConfig.findOne({ skuId: body.skuId });
+      const gates = {
+        assetReady:       config?.assetReady       ?? false,
+        jewelleryTypeSet: config?.jewelleryTypeSet ?? false,
+        calibrationReady: config?.calibrationReady ?? false,
+      };
+      if (!gates.assetReady || !gates.jewelleryTypeSet || !gates.calibrationReady) {
+        return NextResponse.json({ error: "gates_not_satisfied", gates }, { status: 422 });
+      }
+    }
+
+    // Set jewelleryTypeSet gate when jewelleryType changes
+    const setFields: Record<string, unknown> = { ...body };
+    if (body.jewelleryType) setFields.jewelleryTypeSet = true;
+
     const updated = await ProductTryonConfig.findOneAndUpdate(
       { skuId: body.skuId },
-      { $set: body },
+      { $set: setFields },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
 
