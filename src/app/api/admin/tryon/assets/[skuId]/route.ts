@@ -10,7 +10,9 @@ function assetCategory(type: JewelleryType): AssetCategory {
   if (["earring_stud", "earring_drop", "earring_jhumka"].includes(type)) return "earring";
   if (["necklace_choker", "necklace_long"].includes(type))               return "necklace";
   if (type === "ring")                                                    return "ring";
-  return "kada_bracelet";
+  if (type === "kada" || type === "bracelet")                            return "kada_bracelet";
+  const _exhaustive: never = type;
+  throw new Error(`assetCategory: unhandled type ${_exhaustive as string}`);
 }
 
 export async function POST(
@@ -32,9 +34,10 @@ export async function POST(
     const { url: assetUrl } = await uploadBuffer(assetBuf, `sundari/assets/${skuId}`, "product");
 
     const updateFields: Record<string, unknown> = {
-      assetKey:    assetUrl,
-      assetStatus: "ready",
-      assetReady:  true,
+      assetKey:         assetUrl,
+      assetStatus:      "ready",
+      assetReady:       true,
+      calibrationReady: false,   // always reset — new asset invalidates prior calibration
     };
 
     if (jewelleryType) {
@@ -45,7 +48,6 @@ export async function POST(
         attachmentX:      analysis.attachmentX,
         attachmentY:      analysis.attachmentY,
         mirrorForLeft:    analysis.suggestedMirror,
-        calibrationReady: false,  // admin must still review proposals
       });
     }
 
