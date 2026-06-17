@@ -21,6 +21,9 @@ type JewelleryType =
   | "earring_jhumka"
   | "necklace_choker"
   | "necklace_long"
+  | "ring"
+  | "kada"
+  | "bracelet"
   | "";
 
 const JEWELLERY_LABELS: Record<string, string> = {
@@ -29,6 +32,9 @@ const JEWELLERY_LABELS: Record<string, string> = {
   earring_jhumka:  "Earring — Jhumka",
   necklace_choker: "Necklace — Choker",
   necklace_long:   "Necklace — Long",
+  ring:            "Ring",
+  kada:            "Kada",
+  bracelet:        "Bracelet",
 };
 
 interface DBProduct {
@@ -48,6 +54,12 @@ interface ProductConfig {
   assetKey?:        string;
   maskKey?:         string;
   promptDescriptor?: string;
+  attachmentX?:      number;
+  attachmentY?:      number;
+  defaultScaleMm?:   number;
+  assetReady:        boolean;
+  jewelleryTypeSet:  boolean;
+  calibrationReady:  boolean;
 }
 
 interface RowState {
@@ -61,6 +73,14 @@ interface RowState {
   assetStatus:      AssetStatus;
   totalTryons:      number;
   assetUrl?:        string;
+  attachmentX:      number;
+  attachmentY:      number;
+  defaultScaleMm:   number;
+  assetReady:       boolean;
+  jewelleryTypeSet: boolean;
+  calibrationReady: boolean;
+  testPreviewUrl:   string | null;
+  testLoading:      boolean;
 }
 
 export default function AdminTryOnPage() {
@@ -99,6 +119,14 @@ export default function AdminTryOnPage() {
             assetStatus:      cfg?.assetStatus ?? "none",
             totalTryons:      cfg?.totalTryons ?? 0,
             assetUrl:         cfg?.assetKey,
+            attachmentX:      cfg?.attachmentX      ?? 0.5,
+            attachmentY:      cfg?.attachmentY      ?? 0.1,
+            defaultScaleMm:   cfg?.defaultScaleMm   ?? 12,
+            assetReady:       cfg?.assetReady       ?? false,
+            jewelleryTypeSet: cfg?.jewelleryTypeSet ?? false,
+            calibrationReady: cfg?.calibrationReady ?? false,
+            testPreviewUrl:   null,
+            testLoading:      false,
           };
         }
         setConfigs(map);
@@ -281,6 +309,78 @@ export default function AdminTryOnPage() {
                       </select>
                       <ChevronDown size={12} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--gold-dim)]" />
                     </div>
+                    {row.assetReady && (
+                      <div className="mt-3 rounded-lg border border-[rgba(138,106,58,0.2)] p-4">
+                        <p className="mb-3 text-xs font-medium uppercase tracking-wider text-[var(--gold)]">Calibration</p>
+                        <div className="grid grid-cols-3 gap-3">
+                          {[
+                            { label: "Attach X (0–1)", key: "attachmentX",    min: 0,  max: 1,  step: 0.01 },
+                            { label: "Attach Y (0–1)", key: "attachmentY",    min: 0,  max: 1,  step: 0.01 },
+                            { label: "Scale (mm)",     key: "defaultScaleMm", min: 1,  max: 80, step: 0.5  },
+                          ].map(({ label, key, min, max, step }) => (
+                            <label key={key} className="flex flex-col gap-1">
+                              <span className="text-xs text-[var(--parchment-dim)]">{label}</span>
+                              <input
+                                type="number"
+                                min={min} max={max} step={step}
+                                value={(row as unknown as Record<string, unknown>)[key] as number}
+                                onChange={(e) =>
+                                  setConfigs(prev => ({
+                                    ...prev,
+                                    [product._id]: { ...prev[product._id], [key]: parseFloat(e.target.value) },
+                                  }))
+                                }
+                                className="rounded border border-[rgba(138,106,58,0.3)] bg-transparent px-2 py-1 text-sm text-[var(--parchment)]"
+                              />
+                            </label>
+                          ))}
+                        </div>
+                        <div className="mt-3 flex gap-3">
+                          <button
+                            onClick={async () => {
+                              const res = await fetch(`/api/admin/tryon/calibrate/${product._id}`, {
+                                method: "POST",
+                                headers: { "content-type": "application/json" },
+                                body: JSON.stringify({
+                                  attachmentX: row.attachmentX, attachmentY: row.attachmentY,
+                                  defaultScaleMm: row.defaultScaleMm,
+                                }),
+                              });
+                              if (res.ok) {
+                                setConfigs(prev => ({
+                                  ...prev,
+                                  [product._id]: { ...prev[product._id], calibrationReady: true },
+                                }));
+                              }
+                            }}
+                            className="rounded bg-[rgba(138,106,58,0.15)] px-3 py-1.5 text-xs text-[var(--parchment)] hover:bg-[rgba(138,106,58,0.25)]"
+                          >
+                            Save Calibration
+                          </button>
+                          <button
+                            disabled={!row.calibrationReady || row.testLoading}
+                            onClick={async () => {
+                              setConfigs(prev => ({ ...prev, [product._id]: { ...prev[product._id], testLoading: true } }));
+                              const res  = await fetch(`/api/admin/tryon/test/${product._id}`, { method: "POST" });
+                              const data = await res.json() as { previewUrl?: string };
+                              setConfigs(prev => ({
+                                ...prev,
+                                [product._id]: { ...prev[product._id], testLoading: false, testPreviewUrl: data.previewUrl ?? null },
+                              }));
+                            }}
+                            className="rounded border border-[rgba(138,106,58,0.3)] px-3 py-1.5 text-xs text-[var(--parchment)] hover:border-[var(--gold)] disabled:opacity-40"
+                          >
+                            {row.testLoading ? "Running…" : "Test Placement"}
+                          </button>
+                        </div>
+                        {row.testPreviewUrl && (
+                          <div className="mt-3">
+                            <p className="mb-1 text-xs text-[var(--parchment-dim)]">Test preview</p>
+                            <img src={row.testPreviewUrl} alt="Test placement" className="max-h-48 rounded object-contain" />
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </td>
 
                   {/* Prompt Descriptor — moved into table row */}
@@ -348,23 +448,34 @@ export default function AdminTryOnPage() {
                     <div className="flex flex-col items-start gap-1">
                       <button
                         onClick={() => toggleEnabled(product._id)}
-                        className="transition-colors"
-                        title={
-                          row.assetStatus !== "ready" && !row.tryonEnabled
-                            ? "Upload an asset first"
-                            : row.tryonEnabled ? "Disable try-on" : "Enable try-on"
-                        }
+                        disabled={row.saving || (!row.tryonEnabled && !(row.assetReady && row.jewelleryTypeSet && row.calibrationReady))}
+                        className="transition-colors disabled:opacity-50"
+                        title={!row.tryonEnabled && !(row.assetReady && row.jewelleryTypeSet && row.calibrationReady)
+                          ? "Upload asset, set type, and calibrate before enabling"
+                          : undefined}
                       >
                         {row.tryonEnabled
                           ? <ToggleRight size={28} className="text-[var(--gold)]" />
                           : <ToggleLeft  size={28} className="text-[rgba(138,106,58,0.4)]" />
                         }
                       </button>
-                      {row.assetStatus !== "ready" && !row.tryonEnabled && (
-                        <span className="flex items-center gap-1 text-[9px] text-[var(--cream-muted)]">
-                          <AlertCircle size={9} /> needs asset
-                        </span>
-                      )}
+                      {/* Three-gate readiness */}
+                      <div className="mt-2 flex gap-3 text-xs">
+                        {[
+                          { label: "Asset",      ok: row.assetReady },
+                          { label: "Type",       ok: row.jewelleryTypeSet },
+                          { label: "Calibrated", ok: row.calibrationReady },
+                        ].map(({ label, ok }) => (
+                          <span
+                            key={label}
+                            className={`flex items-center gap-1 rounded px-2 py-0.5 ${
+                              ok ? "bg-green-900/30 text-green-400" : "bg-[rgba(138,106,58,0.1)] text-[var(--parchment-dim)]"
+                            }`}
+                          >
+                            {ok ? "✓" : "○"} {label}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </td>
 
