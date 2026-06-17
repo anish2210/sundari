@@ -34,7 +34,7 @@ const TryOnJobSchema = new Schema<ITryOnJob>(
     status: {
       type: String,
       enum: ["queued", "processing", "preview_ready", "complete", "failed", "expired"],
-      default: "queued",
+      default: "preview_ready",
     },
     previewUrl:         { type: String },
     refinedUrl:         { type: String },

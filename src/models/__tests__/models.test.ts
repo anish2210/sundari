@@ -57,6 +57,13 @@ describe("TryOnJob", () => {
     expect(job.status).toBe("preview_ready");
     expect(job.previewUrl).toBe("https://res.cloudinary.com/test/preview.jpg");
   });
+
+  it("defaults status to preview_ready", async () => {
+    const job = await TryOnJob.create({
+      jobId: "job-002", sessionId: "sess-002", skuId: "sku-002",
+    });
+    expect(job.status).toBe("preview_ready");
+  });
 });
 
 describe("TryOnSession", () => {
