@@ -39,8 +39,11 @@ export async function PATCH(req: NextRequest) {
     }
 
     // Set jewelleryTypeSet gate when jewelleryType changes
-    const setFields: Record<string, unknown> = { ...body };
-    if (body.jewelleryType) setFields.jewelleryTypeSet = true;
+    const setFields: Record<string, unknown> = {};
+    if (body.tryonEnabled !== undefined)     setFields.tryonEnabled     = body.tryonEnabled;
+    if (body.jewelleryType !== undefined)    setFields.jewelleryType    = body.jewelleryType;
+    if (body.promptDescriptor !== undefined) setFields.promptDescriptor = body.promptDescriptor;
+    if (body.jewelleryType)                  setFields.jewelleryTypeSet = true;
 
     const updated = await ProductTryonConfig.findOneAndUpdate(
       { skuId: body.skuId },
